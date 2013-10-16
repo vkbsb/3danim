@@ -107,6 +107,87 @@ void freeModel(struct Model *m)
     free(m->acts);
 }
 
+struct Model * loadModelFromCharArray(char *bytes)
+{
+    int face_offset = 0;
+    int i = 0;
+    int j = 0;
+    int k = 0;
+    
+    char* tempPtr = bytes;
+    
+    struct Model *m = (struct Model*) malloc(sizeof(struct Model));
+    
+    sscanf(tempPtr,"%d %d %d",&(m->num_vert),&(m->num_faces),&(m->num_acts));
+    CCLog("%d %d %d",m->num_vert,m->num_faces,m->num_acts);
+    SEEK_TO_NEXTLINE(tempPtr);
+    
+    //allocate memory for the faces. i.e, allocate memory for the indices
+    m->indices = (int *) malloc(sizeof(int) * 3 * m->num_faces);    //3 indices per triangle
+    m->uv = (float*) malloc(sizeof(float) * 2 * 3 * m->num_faces);  //2 uv per vertex(index) per triangle
+    DEBUG_PRINT(stderr, "%d %d %d\n", m->num_vert, m->num_faces, m->num_acts);
+    
+    
+    for(i = 0; i < m->num_faces; i++)
+    {
+        //fscanf(fp, "%d %d %d", &m->indices[i*3+0], &m->indices[i*3+1], &m->indices[i*3+2]);
+        sscanf(tempPtr,"%d %d %d",&m->indices[i*3+0], &m->indices[i*3+1], &m->indices[i*3+2]);
+        CCLog("%d %d %d",m->indices[i*3+0], m->indices[i*3+1], m->indices[i*3+2]);
+        SEEK_TO_NEXTLINE(tempPtr);
+        
+        
+        DEBUG_PRINT(stderr, "%d %d %d\n", m->indices[i*3+0], m->indices[i*3+1], m->indices[i*3+2]);
+        for(face_offset = i * 6, j = 0; j < 3; j++)
+        {
+            //fscanf(fp, "%f %f", &m->uv[face_offset+j*2], &m->uv[face_offset+j*2+1]);
+            sscanf(tempPtr,"%f %f",&m->uv[face_offset+j*2], &m->uv[face_offset+j*2+1]);
+            CCLog("%f %f",m->uv[face_offset+j*2], m->uv[face_offset+j*2+1]);
+            SEEK_TO_NEXTLINE(tempPtr);
+            
+            DEBUG_PRINT(stderr, "%.3f %.3f\n", m->uv[face_offset+j*2], m->uv[face_offset+j*2+1]);
+        }
+    }
+    //allocate memory for the actions
+    m->acts = (struct Action*) malloc(sizeof(struct Action) * m->num_acts);
+    for(i = 0; i < m->num_acts; i++)
+    {
+        //fscanf(fp, "%s %d", m->acts[i].name, &m->acts[i].num_frames);
+        sscanf(tempPtr, "%s %d", m->acts[i].name, &m->acts[i].num_frames);
+        CCLog("%s %d", m->acts[i].name, m->acts[i].num_frames);
+        SEEK_TO_NEXTLINE(tempPtr);
+        
+        DEBUG_PRINT(stderr, "%s %d\n", m->acts[i].name, m->acts[i].num_frames);
+        ///allocate memory for the keyframes
+        m->acts[i].kf = (struct KeyFrame *) malloc(sizeof(struct KeyFrame) * m->acts[i].num_frames);
+        for(j = 0; j < m->acts[i].num_frames; j++)
+        {
+            float * verts = (float *) malloc(sizeof(float) * 3 * m->num_vert);
+            //fscanf(fp, "%d", &m->acts[i].kf[j].frame_num);
+            sscanf(tempPtr, "%d", &m->acts[i].kf[j].frame_num);
+            CCLog("%d",m->acts[i].kf[j].frame_num);
+            SEEK_TO_NEXTLINE(tempPtr);
+            
+            
+            DEBUG_PRINT(stderr, "%d\n", m->acts[i].kf[j].frame_num);
+            //m.acts[i].kf[j].verts //
+            for(k = 0; k < m->num_vert; k++)
+            {
+                //fscanf(fp, "%f %f %f", verts+k*3, verts+k*3+1, verts+k*3+2);
+                sscanf(tempPtr,"%f %f %f", verts+k*3, verts+k*3+1, verts+k*3+2);
+                CCLog("%f %f %f", verts+k*3, verts+k*3+1, verts+k*3+2);
+                SEEK_TO_NEXTLINE(tempPtr);
+                
+                DEBUG_PRINT(stderr, "%.3f %.3f %.3f\n", verts[k*3], verts[k*3+1], verts[k*3+2]);
+            }
+            m->acts[i].kf[j].verts = verts;
+        }
+        
+    }
+    
+    return m;
+}
+
+
 struct Model * loadModel(const char *filename)
 {
     FILE *fp = NULL;

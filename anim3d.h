@@ -50,6 +50,7 @@ struct Obj
     int cur_frame;
 };
 
+struct Model * loadModelFromCharArray(char *bytes);
 struct Model * loadModel(const char *filename);
 void freeModel(struct Model*);
 void setAction(struct Obj *obj, const char *actname);
