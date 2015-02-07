@@ -23,11 +23,11 @@ You will need to install Blender 2.64 to be able to use the exporter.
 You can download it from http://blender.org
 
 *Installing Blender Exporter:
-Open Blender
-Go to  File>User Preferences
-In the dialog box click on "Addons" tab.
-Click "Install Addon" button at the bottom of the dialogbox. 
-Traverse to the directory where you have the exporter script and select it.
+1) Open Blender
+2) Go to  File>User Preferences
+3) In the dialog box click on "Addons" tab.
+4) Click "Install Addon" button at the bottom of the dialogbox. 
+5) Traverse to the directory where you have the exporter script and select it.
 
 
 *Loaders
