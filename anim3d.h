@@ -8,6 +8,15 @@
 #define DEBUG_PRINT(...)
 #endif
 
+#define MAX_FACES 500
+
+#define SEEK_TO_NEXTLINE(ptr)   \
+while( *ptr != '\n' )    \
+{           \
+++ptr;   \
+}   \
+++ptr\
+
 
 /*struct Face //asssuming triangles
 {
@@ -55,4 +64,6 @@ struct Model * loadModel(const char *filename);
 void freeModel(struct Model*);
 void setAction(struct Obj *obj, const char *actname);
 void renderObject(struct Obj *obj);
+void renderObject(struct Obj *obj, int index, int n_index);
+void getBounds(struct Obj *obj, float *min_x, float *min_y, float *max_x, float *max_y);
 #endif //
