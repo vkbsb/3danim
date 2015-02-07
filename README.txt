@@ -19,6 +19,17 @@ KeyFrame animation doesn't get any easier :)
 The blender exporter is a simple export script that 
 will be able to export animations created in blender.
 
+You will need to install Blender 2.64 to be able to use the exporter.
+You can download it from http://blender.org
+
+*Installing Blender Exporter:
+Open Blender
+Go to  File>User Preferences
+In the dialog box click on "Addons" tab.
+Click "Install Addon" button at the bottom of the dialogbox. 
+Traverse to the directory where you have the exporter script and select it.
+
+
 *Loaders
 There are a bunch of loaders written for personal projects.
 
